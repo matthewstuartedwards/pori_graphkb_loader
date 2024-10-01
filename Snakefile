@@ -57,10 +57,9 @@ rule all:
 rule download_ncit:
     output: f'{DATA_DIR}/ncit/Thesaurus.txt',
     shell: f'''
-        curl --create-dirs -o {DATA_DIR}/ncit/Thesaurus.txt https://evs.nci.nih.gov/ftp1/NCI_Thesaurus/Thesaurus.FLAT.zip
-        unzip Thesaurus.FLAT.zip
-        rm Thesaurus.FLAT.zip
-        rm -rf __MACOSX'''
+        mkdir -p {DATA_DIR}/ncit
+        curl https://evs.nci.nih.gov/ftp1/NCI_Thesaurus/Thesaurus.FLAT.zip | zcat > {DATA_DIR}/ncit/Thesaurus.txt
+        rm -rf {DATA_DIR}/ncit/__MACOSX'''
 
 
 rule download_ncit_fda:
