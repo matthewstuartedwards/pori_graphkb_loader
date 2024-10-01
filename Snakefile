@@ -81,12 +81,10 @@ rule download_ensembl:
 rule download_fda_srs:
     output: f'{DATA_DIR}/fda/UNII_Records.txt'
     shell: f'''
-        cd {DATA_DIR}/fda
-        wget https://precision.fda.gov/uniisearch/archive/latest/UNII_Data.zip
-        unzip UNII_Data.zip
-        rm UNII_Data.zip
-
-        mv UNII*.txt UNII_Records.txt
+        curl -L --create-dirs -o {DATA_DIR}/fda/UNII_Data.zip https://precision.fda.gov/uniisearch/archive/latest/UNII_Data.zip
+        unzip -o -d {DATA_DIR}/fda {DATA_DIR}/fda/UNII_Data.zip
+        rm {DATA_DIR}/fda/UNII_Data.zip
+        mv {DATA_DIR}/fda/UNII*.txt {DATA_DIR}/fda/UNII_Records.txt
         '''
 
 
@@ -101,18 +99,14 @@ rule download_refseq:
 rule download_uberon:
     output: f'{DATA_DIR}/uberon/uberon.owl'
     shell: f'''
-        cd {DATA_DIR}/uberon \
-        wget http://purl.obolibrary.org/obo/uberon.owl
+        curl -L --create-dirs -o {DATA_DIR}/uberon/uberon.owl https://github.com/obophenotype/uberon/releases/latest/download/uberon.owl
         '''
 
 
 rule download_do:
     output: f'{DATA_DIR}/do/doid.json'
     shell: f'''
-        REPO=https://github.com/DiseaseOntology/HumanDiseaseOntology.git;
-        LATEST=$(git ls-remote $REPO --tags v\\* | cut -f 2 | sed 's/refs\\/tags\///' | grep '\\bv[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]\\b' | sort -d | tail -n 1)
-        echo $LATEST
-        curl --create-dirs -o {DATA_DIR}/do/doid.json https://github.com/DiseaseOntology/HumanDiseaseOntology/raw/\$LATEST/src/ontology/doid.json
+        curl --create-dirs -o {DATA_DIR}/do/doid.json https://raw.githubusercontent.com/DiseaseOntology/HumanDiseaseOntology/refs/heads/main/src/ontology/doid.json
         '''
 
 
@@ -142,9 +136,8 @@ rule download_PMC4232638:
 rule download_cgi:
     output: f'{DATA_DIR}/cgi/cgi_biomarkers_per_variant.tsv'
     shell: f'''
-        cd {DATA_DIR}/cgi
-        wget https://www.cancergenomeinterpreter.org/data/biomarkers/cgi_biomarkers_20180117.zip
-        unzip cgi_biomarkers_20180117.zip
+        curl --create-dirs -o {DATA_DIR}/cgi/cgi_biomarkers.zip https://www.cancergenomeinterpreter.org/data/biomarkers/cgi_biomarkers_20180117.zip
+        unzip -d {DATA_DIR}/cgi {DATA_DIR}/cgi/cgi_biomarkers.zip
         '''
 
 
