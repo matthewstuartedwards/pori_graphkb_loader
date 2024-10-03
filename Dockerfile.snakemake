@@ -35,11 +35,8 @@ RUN chmod 777 /usr/src/app/snakemake_logs
 # Copy the Snakefile to the working directory (assuming it's already in the build context)
 COPY . .
 
-# Setup snakemake environment variables
-ENV GKB_URL=http://api.graphkb.svc.cluster.local:8080/api
-ENV GKB_USER=graphkb_importer
-ENV GKB_PASS=secret
-ENV GBK_LOADER=
+# Still getting NODE version errors, but a rebuild is quick and helps.
+RUN npm rebuild
 
 # Run the Snakefile using Snakemake
 #CMD [ "sh", "-c", "snakemake --debug -j 1 --config gkb_url=$GKB_URL gkb_user=$GKB_USER gkb_pass=$GKB_PASS --until $GKB_LOADER"]
